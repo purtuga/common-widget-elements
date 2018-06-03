@@ -1,0 +1,36 @@
+{
+    "name": "common-widget-elements",
+    "version": "1.0.0",
+    "description": "",
+    "main": "src/index.js",
+    "scripts": {
+        "serve": "webpack-dev-server --config node_modules/project-base/configs/webpack.dev.js --progress --hot --color --entry ./my.dev/index.js",
+        "build": "webpack --config node_modules/project-base/configs/webpack.dev.js",
+        "build:ie": "webpack --config node_modules/project-base/configs/webpack.prod.js --entry ./my.dev/index.js --output-path ./my.dev --output-filename ie-test-bundle.js",
+        "build:prod": "webpack --config node_modules/project-base/configs/webpack.prod.js",
+        "build:prod:min": "webpack --config node_modules/project-base/configs/webpack.prod.uglify.js",
+        "build:apiDocs": "jsdoc -c node_modules/project-base/configs/jsdoc.conf.json",
+        "dist": "npm run build:prod&&npm run build:prod:min",
+        "setup:dev": "node node_modules/project-base/scripts/create-dev",
+        "test": "tape -r @std/esm test/**/*.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/purtuga/common-widget-elements.git"
+    },
+    "keywords": [],
+    "author": "Paul Tavares",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/purtuga/common-widget-elements/issues"
+    },
+    "homepage": "https://github.com/purtuga/common-widget-elements#readme",
+    "devDependencies": {
+        "project-base": "github:purtuga/project-base",
+        "project-showcase": "github:purtuga/project-showcase"
+    },
+    "dependencies": {
+        "dom-data-bind": "github:purtuga/dom-data-bind",
+        "component-element": "github:purtuga/ComponentElement"
+    }
+}
