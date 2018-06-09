@@ -14,12 +14,6 @@ const removeBodyEvent = eleInst => {
 /**
  * A popup widget that will be displayed and position relative to a another element
  *
- * @property {Boolean} show
- * @property {String|Element} for
- * @property {Boolean} autoClose
- *  When set to `true` and a click event is detected outside of the popup,
- *  the popup will be automatically closed
- *
  * @example
  *
  * const popup = document.createElement("pop-up");
@@ -92,6 +86,12 @@ export class Popup extends ComponentElement {
     //-------------------------------------------------------------
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  PROPS AND ATTRIBUTES  ~~~~
+
+    /**
+     *
+     * @param value
+     * @returns {*}
+     */
     @prop({required: true, attr: true})
     set for(value) {
         if (value && "string" === typeof value) {
@@ -100,20 +100,53 @@ export class Popup extends ComponentElement {
         return value;
     }
 
-
+    /**
+     * When set to `true`, popup will be made visible.
+     *
+     * @property {Boolean} show
+     */
     @prop({boolean: true})
     get show() {}
 
 
+    /**
+     * If Popup shuld be auto closed when user clicks outside of its content.
+     *
+     * @property {Boolean} autoClose
+     */
     @prop({boolean: true})
     get autoClose() {};
+
+
+    /**
+     * The edge of the popup that should be used when position it next to the
+     * `for` element. Default is `top left`.
+     * See `common-micro-libs/src/domUtils/domPosition` for other possible values
+     *
+     * @property {string} my
+     */
+    @prop({attr: true})
+    get my() { return "top left"; }
+
+
+    /**
+     * The edge of the `for` element that will be used to position the popup against.
+     * Default is `bottom left`.
+     * See `common-micro-libs/src/domUtils/domPosition` for other possible values
+     *
+     * @property {string} at
+     */
+    @prop({attr: true})
+    get at() { return "bottom left"; }
 
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  LIFE CYCLE HOOKS  ~~~~~
     // Called from constructor
     init() {
-        this._showPropWas = this.props.show;
+        // this._forPropWas = this.props.for;
         this._bodyEv = null;
+        this.onPropsChange(this.position, "at");
+        this.onPropsChange(this.position, "my");
     }
 
     // Called when all required `props` have been provided
@@ -137,9 +170,9 @@ export class Popup extends ComponentElement {
     @bind
     _handleShowProp(){
         if (this.for && this.show) {
-            domPosition(this, this.for/*, options */);
+            this.position();
 
-            // Auto close?
+            // Auto close? then setup body event
             if (this.autoClose && !this._bodyEv) {
                 setTimeout(() => {
                     this._bodyEv = domAddEventListener(document.body, "click", ev => {
@@ -158,7 +191,23 @@ export class Popup extends ComponentElement {
             removeBodyEvent(this);
         }
 
-        this._showPropWas = this.show;
+        // FIXME: Handle changing the `for` value - would reposition popup
+        // this._forPropWas = this.for;
+    }
+
+    /**
+     * Positions the popup against the current `for` element.
+     */
+    @bind
+    position() {
+        const options = {}; // FIXME: move this to a computed prop
+        if (this.my) {
+            options.my = this.my
+        }
+        if (this.at) {
+            options.at = this.at;
+        }
+        domPosition(this, this.for, options);
     }
 }
 
