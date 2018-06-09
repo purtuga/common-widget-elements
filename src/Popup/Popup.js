@@ -1,5 +1,15 @@
 import {ComponentElement, prop, bind} from "component-element"
 import domPosition from "common-micro-libs/src/domutils/domPosition";
+import domAddEventListener from "common-micro-libs/src/domutils/domAddEventListener";
+
+//=====================================================================================
+const removeBodyEvent = eleInst => {
+    if (eleInst._bodyEv) {
+        eleInst._bodyEv.remove();
+        eleInst._bodyEv = null;
+    }
+};
+
 
 /**
  * A popup widget that will be displayed and position relative to a another element
@@ -43,6 +53,7 @@ export class Popup extends ComponentElement {
     padding: 0.5em;
     min-height: 2em;
     width: 15em;
+    max-height: 15em;
     z-index: 5000;
     overflow: auto;
     display: none;
@@ -90,21 +101,26 @@ export class Popup extends ComponentElement {
     }
 
 
-    @prop({attr: true, boolean: true})
-    get show() { return false; }
-    // set show(newValue) {
-    //     return this.hasAttribute("show");
-    // }
+    @prop({boolean: true})
+    get show() {}
+
+
+    @prop({boolean: true})
+    get autoClose() {};
+
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  LIFE CYCLE HOOKS  ~~~~~
     // Called from constructor
-    // init() {}
+    init() {
+        this._showPropWas = this.props.show;
+        this._bodyEv = null;
+    }
 
     // Called when all required `props` have been provided
     ready() {
-        this._showPropWas = this.props.show;
         this.onPropsChange(this._handleShowProp);
         this._handleShowProp();
+        this.onDestroy(() => removeBodyEvent(this));
     }
 
     // Called if required fields are removed
@@ -122,9 +138,28 @@ export class Popup extends ComponentElement {
     _handleShowProp(){
         if (this.for && this.show) {
             domPosition(this, this.for/*, options */);
-        }
-    }
 
+            // Auto close?
+            if (this.autoClose && !this._bodyEv) {
+                setTimeout(() => {
+                    this._bodyEv = domAddEventListener(document.body, "click", ev => {
+                        if (!this.$ui.contains(ev.target)) {
+                            // FIXME: support onHide callback? maybe event?
+
+                            removeBodyEvent(this);
+                            this.show = false;
+                        }
+                    });
+                }, 200);
+
+            }
+        }
+        else {
+            removeBodyEvent(this);
+        }
+
+        this._showPropWas = this.show;
+    }
 }
 
 export default Popup;

@@ -4,7 +4,19 @@ import Popup from "../src/Popup/Popup"
 // import other showcases now so that they register themselves.
 
 //========================================================
+const fillerParagraphs = `
+<p>lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum</p>
+<p>lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum</p>
+<p>lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum</p>
+<p>lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum</p>
+<p>lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum</p>
+<p>lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum</p>
+<p>lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum</p>`;
+
+
+
 Popup.define();
+
 
 showcase("About", function ($content) {
     $content.innerHTML = `
@@ -52,15 +64,10 @@ showcase("Popup (in shadowRoot)", function ($content) {
 //----------------------------------------------------------------------------------
 showcase("Popup (in body)", function ($content) {
     $content.innerHTML = `
-<h2>Popup inserted into <code>body</code>, but show for elemnet in shadowRoot</h2>
+<h2>Popup inserted into <code>body</code></h2>
+<p>The popup is attached (<code>for</code> to an element in shadowRoot. Also, the <code>autoClose</code> is set to true</p>
 <p><a href="javascript:">Click to show</a></p>
-<p>lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum</p>
-<p>lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum</p>
-<p>lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum</p>
-<p>lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum</p>
-<p>lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum</p>
-<p>lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum</p>
-<p>lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum</p>
+${ fillerParagraphs }
 `;
     const $a = $content.querySelector("a");
     let $popup;
@@ -69,6 +76,7 @@ showcase("Popup (in body)", function ($content) {
             $popup = document.createElement("pop-up");
             $popup.innerHTML = `<div>my popup here</div>`;
             $popup.for = $a;
+            $popup.autoClose = true;
             document.body.append($popup)
         }
 
@@ -80,4 +88,40 @@ showcase("Popup (in body)", function ($content) {
         }
     });
 });
+
+
+
+
+//----------------------------------------------------------------------------------
+// Define popup in a declarative way
+//----------------------------------------------------------------------------------
+showcase("Popup (Declarative Init)", function ($content) {
+    $content.innerHTML = `
+<h2>Popup inserted into <code>body</code></h2>
+<p>The popup is attached (<code>for</code> to an element in shadowRoot. Also, the <code>autoClose</code> is set to true</p>
+<p><a href="javascript:">Click to show</a></p>
+${ fillerParagraphs }
+`;
+    const $a = $content.querySelector("a");
+    let $popup;
+    $a.addEventListener("click", () => {
+        if (!$popup) {
+            const $div = document.createElement("div");
+            $div.innerHTML = `<pop-up auto-close>
+<p>my popup here</p>
+${fillerParagraphs}
+</pop-up>`;
+            $popup = $div.querySelector("pop-up");
+            $popup.for = $a;
+            document.body.append($popup)
+        }
+
+        $popup.show = !$popup.show;
+    });
+});
+
+
+
+
+
 
