@@ -1,2 +1,2 @@
 
-export const VERSION = "___VERSION___";
+export const VERSION = BUILD.DATA.VERSION;
