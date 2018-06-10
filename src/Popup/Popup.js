@@ -11,8 +11,20 @@ const removeBodyEvent = eleInst => {
 };
 
 
+// FIXME: Support for `show` and `hide` events
+// FIXME: re-define configurable css var()'s
+
+
+
 /**
  * A popup widget that will be displayed and position relative to a another element
+ *
+ * ## Styling
+ * The following variables are used for styling:
+ *
+ *      --theme-box-shadow
+ *      --theme-color-light
+ *      --theme-spacing-2
  *
  * @example
  *
@@ -21,7 +33,6 @@ const removeBodyEvent = eleInst => {
  * popup.for = document.querySelector("a#show");
  * document.body.appendChild(popup);
  * popup.show = true;
- *
  */
 export class Popup extends ComponentElement {
     //-------------------------------------------------------------
@@ -35,16 +46,23 @@ export class Popup extends ComponentElement {
         return "pop-up";
     }
 
+
     static get template() {
         return `
 <style>
 :host {
     box-sizing: border-box;
-    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.4);
+    box-shadow: var(
+        --theme-box-shadow, 
+        0 8px 10px 1px rgba(0,0,0,0.14),
+        0 3px 14px 2px rgba(0,0,0,0.12), 
+        0 5px 5px -3px rgba(0,0,0,0.2)
+    );
 
-    background-color: white;
+    background-color: var(--theme-color-light, white);
+    color: var(--theme-color-dark, black);
     position: absolute;
-    padding: 0.5em;
+    padding: var(--theme-spacing-2, 0.5em);
     min-height: 2em;
     width: 15em;
     max-height: 15em;
@@ -184,7 +202,6 @@ export class Popup extends ComponentElement {
                         }
                     });
                 }, 200);
-
             }
         }
         else {
@@ -200,14 +217,16 @@ export class Popup extends ComponentElement {
      */
     @bind
     position() {
-        const options = {}; // FIXME: move this to a computed prop
-        if (this.my) {
-            options.my = this.my
+        if (this.for && this.show) {
+            const options = {}; // FIXME: move this to a computed prop
+            if (this.my) {
+                options.my = this.my
+            }
+            if (this.at) {
+                options.at = this.at;
+            }
+            domPosition(this, this.for, options);
         }
-        if (this.at) {
-            options.at = this.at;
-        }
-        domPosition(this, this.for, options);
     }
 }
 
