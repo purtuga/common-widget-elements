@@ -199,7 +199,7 @@ export class Popup extends ComponentElement {
             if (this.autoClose && !this._bodyEv) {
                 setTimeout(() => {
                     this._bodyEv = domAddEventListener(document.body, "click", ev => {
-                        if (!this.$ui.contains(ev.target)) {
+                        if (!this.contains(ev.target)) {
                             // FIXME: support onHide callback? maybe event?
 
                             removeBodyEvent(this);
