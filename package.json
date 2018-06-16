@@ -26,6 +26,7 @@
   },
   "homepage": "https://github.com/purtuga/common-widget-elements#readme",
   "devDependencies": {
+    "css-vars-element": "github:purtuga/css-vars-element",
     "project-base": "github:purtuga/project-base",
     "project-showcase": "github:purtuga/project-showcase"
   },

@@ -12,8 +12,6 @@ const removeBodyEvent = eleInst => {
 
 
 // FIXME: Support for `show` and `hide` events
-// FIXME: re-define configurable css var()'s
-
 
 
 /**
@@ -23,8 +21,11 @@ const removeBodyEvent = eleInst => {
  * The following variables are used for styling:
  *
  *      --theme-box-shadow
- *      --theme-color-light
- *      --theme-spacing-2
+ *      --theme-color-bg    (background)
+ *      --theme-color-fg    (forground color for text)
+ *      --theme-spacing-2   (all round padding)
+ *      --theme-color-1     (scrollbar background)
+ *      --theme-color-6     (scrollbar thumb)
  *
  * @example
  *
@@ -52,31 +53,35 @@ export class Popup extends ComponentElement {
 <style>
 :host {
     box-sizing: border-box;
-    box-shadow: var(
-        --theme-box-shadow, 
-        0 8px 10px 1px rgba(0,0,0,0.14),
-        0 3px 14px 2px rgba(0,0,0,0.12),
-        0 5px 5px -3px rgba(0,0,0,0.2)
-    );
-
-    background-color: var(--theme-color-light, white);
-    color: var(--theme-color-dark, black);
     position: absolute;
-    padding: var(--theme-spacing-2, 0.5em);
     min-height: 2em;
     width: 15em;
     max-height: 15em;
     z-index: 5000;
     overflow: auto;
     display: none;
+
+    box-shadow: 0 8px 10px 1px rgba(0,0,0,0.14),
+        0 3px 14px 2px rgba(0,0,0,0.12),
+        0 5px 5px -3px rgba(0,0,0,0.2);
+    box-shadow: var(--theme-box-shadow);
+
+    background-color: white;
+    background-color: var(--theme-color-bg, white);
+
+    color: black;
+    color: var(--theme-color-fg, black);
+
+    padding: 0.5em;
+    padding: var(--theme-spacing-2, 0.5em);
 }
 :host::-webkit-scrollbar {
     width:              0.5em;
-    background-color:   #F5F5F5;
+    background-color:   var(--theme-color-1, #F5F5F5);
 }
 :host::-webkit-scrollbar-thumb {
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
-    background-color  : #555;
+    background-color  : var(--theme-color-6, #555);
 }
 :host([show]) {
     display: block;
@@ -128,7 +133,7 @@ export class Popup extends ComponentElement {
 
 
     /**
-     * If Popup shuld be auto closed when user clicks outside of its content.
+     * If Popup should be auto closed when user clicks outside of its content.
      *
      * @property {Boolean} autoClose
      */
@@ -207,9 +212,6 @@ export class Popup extends ComponentElement {
         else {
             removeBodyEvent(this);
         }
-
-        // FIXME: Handle changing the `for` value - would reposition popup
-        // this._forPropWas = this.for;
     }
 
     /**
