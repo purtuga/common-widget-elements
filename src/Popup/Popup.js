@@ -17,7 +17,7 @@ const removeBodyEvent = eleInst => {
 /**
  * A popup widget that will be displayed and position relative to a another element
  *
- * ## Styling
+ * ### Styling
  * The following variables are used for styling:
  *
  *      --theme-box-shadow
