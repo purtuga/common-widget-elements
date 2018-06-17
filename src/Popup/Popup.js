@@ -111,9 +111,10 @@ export class Popup extends ComponentElement {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  PROPS AND ATTRIBUTES  ~~~~
 
     /**
-     *
-     * @param value
-     * @returns {*}
+     * The element that the popup is for. Could be a css selector (String)
+     * or a HTML Element.
+     * @property
+     * @type {String|HTMLElement}
      */
     @prop({required: true, attr: true})
     set for(value) {
