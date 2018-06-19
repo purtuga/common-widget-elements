@@ -24,6 +24,13 @@ const INTERCEPTOR_STYLES = "outline: none !important;display:block !important;he
  * is a child of the same parent to this element.
  *
  * @extends ComponentElement
+ *
+ * @example
+ *
+ *      <content-access
+ *          block
+ *          on-parent
+ *          ></content-access>
  */
 export class ContentAccess extends ComponentElement {
     //-------------------------------------------------------------
@@ -41,7 +48,14 @@ export class ContentAccess extends ComponentElement {
         return `
 <style>
     :host {
+        display: inline-block;
+        box-sizing: border-box;
+    }
+    :host([on-parent]) {
         display: none;
+    }
+    :host([on-parent]),
+    .modal {
         position: absolute;
         box-sizing: border-box;
         top: 0;
@@ -52,13 +66,20 @@ export class ContentAccess extends ComponentElement {
         right: 0;
         background: lightgrey;
         background: var(--theme-color-1, lightgrey);
-        opacity: 0.5;
+        opacity: 0.6;
     }
-    :host([block]) {
+    :host([block][on-parent]) {
         display: block;
+    }
+    :host(:not([on-parent]):not([block])) .modal {
+        display: none;
+    }
+    :host([block]:not([on-parent])) {
+        position: relative;
     }
 </style>
 <slot></slot>
+<div class="modal"></div>
 `;
     }
 
@@ -81,8 +102,27 @@ export class ContentAccess extends ComponentElement {
     //-------------------------------------------------------------
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  PROPS AND ATTRIBUTES  ~~~~
+
+    /**
+     * Attribute that when present on the element, will make this
+     * element visible and content around it (same parent) non-accessible
+     *
+     * @property
+     * @type Boolean
+     */
     @prop({attr: true, boolean: true})
     get block() {}
+
+
+    /**
+     * When attribute present on element, then the behaviour of this component
+     * changes to making it absolute and to fill the parent's space. Also, the
+     * tab control is applied to all content of the parent element.
+     * @property
+     * @type Boolean
+     */
+    @prop({attr: true, boolean: true})
+    get onParent() {}
 
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  LIFE CYCLE HOOKS  ~~~~~
@@ -96,6 +136,7 @@ export class ContentAccess extends ComponentElement {
             isRefocusing: false
         };
         this.onPropsChange(this._handleBlock, "block");
+        this.onPropsChange(this._handleBlock, "onParent");
         domAddEventListener(this, "click", this);
     }
 
@@ -158,11 +199,28 @@ function insertTabInterceptors (inst) {
         if (!inst[STATE_SYMBOL].topTabInterceptors) {
             createTabInterceptorElements(inst);
         }
-        inst.parentNode.insertBefore(inst[STATE_SYMBOL][INTERCEPTOR_TOP_2], inst.parentNode.firstChild);
-        inst.parentNode.insertBefore(inst[STATE_SYMBOL][INTERCEPTOR_TOP_1], inst.parentNode.firstChild);
 
-        inst.parentNode.appendChild(inst[STATE_SYMBOL][INTERCEPTOR_BOTTOM_2]);
-        inst.parentNode.appendChild(inst[STATE_SYMBOL][INTERCEPTOR_BOTTOM_1]);
+        if (inst.onParent) {
+            inst.parentNode.insertBefore(inst[STATE_SYMBOL][INTERCEPTOR_TOP_2], inst.parentNode.firstChild);
+            inst.parentNode.insertBefore(inst[STATE_SYMBOL][INTERCEPTOR_TOP_1], inst.parentNode.firstChild);
+
+            inst.parentNode.appendChild(inst[STATE_SYMBOL][INTERCEPTOR_BOTTOM_2]);
+            inst.parentNode.appendChild(inst[STATE_SYMBOL][INTERCEPTOR_BOTTOM_1]);
+        }
+        else {
+            inst.parentNode.insertBefore(inst[STATE_SYMBOL][INTERCEPTOR_TOP_1], inst);
+            inst.parentNode.insertBefore(inst[STATE_SYMBOL][INTERCEPTOR_TOP_2], inst);
+
+            if (inst.nextSibling) {
+                inst.parentNode.insertBefore(inst[STATE_SYMBOL][INTERCEPTOR_BOTTOM_1], inst.nextSibling);
+                inst.parentNode.insertBefore(inst[STATE_SYMBOL][INTERCEPTOR_BOTTOM_2], inst.nextSibling);
+
+            } else {
+                inst.parentNode.appendChild(inst[STATE_SYMBOL][INTERCEPTOR_BOTTOM_2]);
+                inst.parentNode.appendChild(inst[STATE_SYMBOL][INTERCEPTOR_BOTTOM_1]);
+            }
+        }
+
     }
 }
 
@@ -178,12 +236,12 @@ function createTabInterceptorElements(inst) {
             inst[STATE_SYMBOL][name] = document.createElement("a");
             inst[STATE_SYMBOL][name].innerText = "-";
             inst[STATE_SYMBOL][name]._role = name;
+            inst[STATE_SYMBOL][name].setAttribute("_role", name);
             inst[STATE_SYMBOL][name].setAttribute("tabindex", "0");
             inst[STATE_SYMBOL][name].setAttribute("style", INTERCEPTOR_STYLES);
             domAddEventListener(inst[STATE_SYMBOL][name], "focus", inst);
         });
     }
 }
-
 
 export default ContentAccess;
