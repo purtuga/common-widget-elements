@@ -1,5 +1,6 @@
 import {ComponentElement, STATE_SYMBOL, prop, bind} from "component-element"
 import {domAddEventListener} from "common-micro-libs/src/domutils/domAddEventListener"
+import {domInsertBefore} from "common-micro-libs/src/domutils/domInsertBefore"
 
 
 //=========================================================================
@@ -27,10 +28,7 @@ const INTERCEPTOR_STYLES = "outline: none !important;display:block !important;he
  *
  * @example
  *
- *      <content-access
- *          block
- *          on-parent
- *          ></content-access>
+ *      <content-access block on-parent></content-access>
  */
 export class ContentAccess extends ComponentElement {
     //-------------------------------------------------------------
@@ -54,6 +52,13 @@ export class ContentAccess extends ComponentElement {
     :host([on-parent]) {
         display: none;
     }
+    :host([on-parent]) .content {
+        position:relative;
+        z-index: 1;
+        max-height: 100%;
+        max-width: 100%;
+        overflow: auto;
+    }
     :host([on-parent]),
     .modal {
         position: absolute;
@@ -64,6 +69,8 @@ export class ContentAccess extends ComponentElement {
         height: 100%;
         bottom: 0;
         right: 0;
+    }
+    .modal {
         background: lightgrey;
         background: var(--theme-color-1, lightgrey);
         opacity: 0.6;
@@ -71,6 +78,7 @@ export class ContentAccess extends ComponentElement {
     :host([block][on-parent]) {
         display: block;
     }
+    /*:host([on-parent]) .modal,*/
     :host(:not([on-parent]):not([block])) .modal {
         display: none;
     }
@@ -78,7 +86,9 @@ export class ContentAccess extends ComponentElement {
         position: relative;
     }
 </style>
-<slot></slot>
+<div class="content">
+    <slot></slot>
+</div>
 <div class="modal"></div>
 `;
     }
@@ -116,8 +126,11 @@ export class ContentAccess extends ComponentElement {
 
     /**
      * When attribute present on element, then the behaviour of this component
-     * changes to making it absolute and to fill the parent's space. Also, the
-     * tab control is applied to all content of the parent element.
+     * changes to making it `position:absolute` and to fill the parent's space.
+     * The tab control is applied to all content of the parent element.
+     * Also: Any content (elements) placed inside of the `content-access` will
+     * be visible and accessible to the user - similar to how modal dialogs work.
+     *
      * @property
      * @type Boolean
      */
@@ -188,7 +201,7 @@ export class ContentAccess extends ComponentElement {
             }
             this[STATE_SYMBOL].isRefocusing = false;
 
-        } else if (ev.type === "click" && this.block) {
+        } else if (ev.type === "click" && this.block && !this.onParent) {
             this[STATE_SYMBOL][INTERCEPTOR_BOTTOM_1].focus();
         }
     }
@@ -196,24 +209,24 @@ export class ContentAccess extends ComponentElement {
 
 function insertTabInterceptors (inst) {
     if (inst.parentNode) {
-        if (!inst[STATE_SYMBOL].topTabInterceptors) {
+        if (!inst[STATE_SYMBOL][INTERCEPTOR_TOP_1]) {
             createTabInterceptorElements(inst);
         }
 
         if (inst.onParent) {
-            inst.parentNode.insertBefore(inst[STATE_SYMBOL][INTERCEPTOR_TOP_2], inst.parentNode.firstChild);
-            inst.parentNode.insertBefore(inst[STATE_SYMBOL][INTERCEPTOR_TOP_1], inst.parentNode.firstChild);
+            domInsertBefore(inst[STATE_SYMBOL][INTERCEPTOR_TOP_2], inst.parentNode.firstChild);
+            domInsertBefore(inst[STATE_SYMBOL][INTERCEPTOR_TOP_1], inst.parentNode.firstChild);
 
             inst.parentNode.appendChild(inst[STATE_SYMBOL][INTERCEPTOR_BOTTOM_2]);
             inst.parentNode.appendChild(inst[STATE_SYMBOL][INTERCEPTOR_BOTTOM_1]);
         }
         else {
-            inst.parentNode.insertBefore(inst[STATE_SYMBOL][INTERCEPTOR_TOP_1], inst);
-            inst.parentNode.insertBefore(inst[STATE_SYMBOL][INTERCEPTOR_TOP_2], inst);
+            domInsertBefore(inst[STATE_SYMBOL][INTERCEPTOR_TOP_1], inst);
+            domInsertBefore(inst[STATE_SYMBOL][INTERCEPTOR_TOP_2], inst);
 
             if (inst.nextSibling) {
-                inst.parentNode.insertBefore(inst[STATE_SYMBOL][INTERCEPTOR_BOTTOM_1], inst.nextSibling);
-                inst.parentNode.insertBefore(inst[STATE_SYMBOL][INTERCEPTOR_BOTTOM_2], inst.nextSibling);
+                domInsertBefore(inst[STATE_SYMBOL][INTERCEPTOR_BOTTOM_1], inst.nextSibling);
+                domInsertBefore(inst[STATE_SYMBOL][INTERCEPTOR_BOTTOM_2], inst.nextSibling);
 
             } else {
                 inst.parentNode.appendChild(inst[STATE_SYMBOL][INTERCEPTOR_BOTTOM_2]);
@@ -225,13 +238,13 @@ function insertTabInterceptors (inst) {
 }
 
 function removeTabInterceptors(inst) {
-    if (inst[STATE_SYMBOL].topTabInterceptor1) {
+    if (inst[STATE_SYMBOL][INTERCEPTOR_TOP_1]) {
         INTERCEPTOR_LIST.forEach(interceptorEle => inst[STATE_SYMBOL][interceptorEle].parentNode && inst[STATE_SYMBOL][interceptorEle].parentNode.removeChild(inst[STATE_SYMBOL][interceptorEle]));
     }
 }
 
 function createTabInterceptorElements(inst) {
-    if (!inst[STATE_SYMBOL].topTabInterceptor1) {
+    if (!inst[STATE_SYMBOL][INTERCEPTOR_TOP_1]) {
         INTERCEPTOR_LIST.forEach(name => {
             inst[STATE_SYMBOL][name] = document.createElement("a");
             inst[STATE_SYMBOL][name].innerText = "-";

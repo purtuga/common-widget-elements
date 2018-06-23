@@ -77,22 +77,27 @@ showcase({ name: "Child elements content", group: GROUP_NAME}, function ($conten
 showcase({ name: "on-parent with Child elements", group: GROUP_NAME}, function ($content) {
     $content.innerHTML = `
 <h2>Set on parent element, but also includes child elements</h2>
-
-
-<!--------------------------- 
+ 
 <p>
     <a id="toggle" href="javascript:void(0);">Toggle Content Access</a>
 </p>
 <div style="position: relative">
-    <content-access block>
-        ${getTabedContent()}
+    ${getLoremIpsum()}
+    ${getTabedContent()}
+    ${getLoremIpsum()}
+    
+    <content-access on-parent block>
+        <div style="margin: 2em 5em; background:white; border: var(--theme-border);padding: 1em;">
+            <h2>This is content inside content-access element - which should be "Tababble"</h2>
+            
+            ${getTabedContent()}
+            ${getLoremIpsum(30, 100)}
+        </div>
     </content-access>
 </div>
 <p>
     <a href="javascript:void(0);">Focus 2</a>
 </p>
-
-------------------------------->
 
 `;
     const contentAccess = $content.querySelector("content-access");
