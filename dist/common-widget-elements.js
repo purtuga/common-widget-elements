@@ -1944,15 +1944,25 @@
          * @property {Boolean} show
          */            }, {
                 key: "show",
-                get: function() {}
+                get: function() {
+                    return false;
+                }
                 /**
          * If Popup should be auto closed when user clicks outside of its content.
          *
          * @property {Boolean} autoClose
          */            }, {
                 key: "autoClose",
-                get: function() {}
-            }, {
+                get: function() {
+                    return false;
+                }
+                /**
+         * The edge of the popup that should be used when position it next to the
+         * `for` element. Default is `top left`.
+         * See `common-micro-libs/src/domUtils/domPosition` for other possible values
+         *
+         * @property {string} my
+         */            }, {
                 key: "my",
                 get: function() {
                     return "top left";
@@ -2223,7 +2233,9 @@
                 }
             }, {
                 key: "block",
-                get: function() {}
+                get: function() {
+                    return false;
+                }
                 /**
          * When attribute present on element, then the behaviour of this component
          * changes to making it `position:absolute` and to fill the parent's space.
@@ -2235,7 +2247,9 @@
          * @type Boolean
          */            }, {
                 key: "onParent",
-                get: function() {}
+                get: function() {
+                    return false;
+                }
             } ], [ {
                 key: "tagName",
                 //-------------------------------------------------------------
@@ -2293,7 +2307,7 @@
         /* concated harmony reexport */        __webpack_require__.d(__webpack_exports__, "ContentAccess", function() {
             return ContentAccess_ContentAccess;
         });
-        var VERSION = "1.0.0";
+        /* global BUILD */        var VERSION = "1.0.0";
         /***/    }, 
     /* 2 */
     /***/ function(module, exports) {
