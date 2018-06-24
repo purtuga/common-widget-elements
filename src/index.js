@@ -1,3 +1,4 @@
+/* global BUILD */
 export {Popup} from "./Popup/Popup"
 export {ContentAccess} from "./ContentAccess/ContentAccess"
 

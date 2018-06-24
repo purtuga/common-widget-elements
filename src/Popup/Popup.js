@@ -130,7 +130,7 @@ export class Popup extends ComponentElement {
      * @property {Boolean} show
      */
     @prop({boolean: true})
-    get show() {}
+    get show() { return false; }
 
 
     /**
@@ -139,7 +139,7 @@ export class Popup extends ComponentElement {
      * @property {Boolean} autoClose
      */
     @prop({boolean: true})
-    get autoClose() {};
+    get autoClose() { return false; }
 
 
     /**

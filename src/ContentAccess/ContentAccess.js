@@ -121,7 +121,7 @@ export class ContentAccess extends ComponentElement {
      * @type Boolean
      */
     @prop({attr: true, boolean: true})
-    get block() {}
+    get block() { return false; }
 
 
     /**
@@ -135,7 +135,7 @@ export class ContentAccess extends ComponentElement {
      * @type Boolean
      */
     @prop({attr: true, boolean: true})
-    get onParent() {}
+    get onParent() { return false; }
 
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  LIFE CYCLE HOOKS  ~~~~~
