@@ -226,7 +226,7 @@ var __LIB =
         };
     }();
     /* harmony default export */    var jsutils_nextTick = nextTick;
-    // CONCATENATED MODULE: ./node_modules/component-element/node_modules/observables/src/objectWatchProp.js
+    // CONCATENATED MODULE: ./node_modules/observables/src/objectWatchProp.js
     //---------------------------------------------------------------------------
         const OBSERVABLE_IDENTIFIER = "___$observable$___";
  // FIXME: this should be a Symbol()

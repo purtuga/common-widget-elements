@@ -9,17 +9,21 @@
     "build": "webpack --config node_modules/project-base/configs/webpack.dev.js",
     "build:ie": "webpack --config node_modules/project-base/configs/webpack.prod.js --entry ./my.dev/index.js --output-path ./my.dev --output-filename ie-test-bundle.js",
     "build:prod": "webpack --config node_modules/project-base/configs/webpack.prod.js",
-    "build:prod:min": "webpack --config node_modules/project-base/configs/webpack.prod.uglify.js",
     "build:prod:esm": "webpack --config node_modules/project-base/configs/webpack.prod.esm.js",
-    "build:prod:esm:min": "webpack --config node_modules/project-base/configs/webpack.prod.esm.minified.js",
     "build:apiDocs": "jsdoc -c node_modules/project-base/configs/jsdoc.conf.json",
-    "dist": "npm run build:prod&&npm run build:prod:min&&npm run build:prod:esm&&npm run build:prod:esm:min",
+    "dist": "npm run build:prod&&npm run build:prod:esm",
     "setup:dev": "node node_modules/project-base/scripts/create-dev",
     "test": "tape -r esm test/**/*.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/purtuga/common-widget-elements.git"
+  },
+  "esm": {
+    "mode": "auto"
+  },
+  "project-base": {
+    "build-with-web-components-polyfill": true
   },
   "keywords": [],
   "author": "Paul Tavares",
