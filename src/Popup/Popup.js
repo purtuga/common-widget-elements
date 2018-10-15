@@ -4,9 +4,9 @@ import domAddEventListener from "common-micro-libs/src/domutils/domAddEventListe
 
 //=====================================================================================
 const removeBodyEvent = eleInst => {
-    if (eleInst._bodyEv) {
-        eleInst._bodyEv.remove();
-        eleInst._bodyEv = null;
+    if (eleInst._docEv) {
+        eleInst._docEv.remove();
+        eleInst._docEv = null;
     }
 };
 
@@ -116,7 +116,7 @@ export class Popup extends ComponentElement {
      * @property
      * @type {String|HTMLElement}
      */
-    @prop({required: true, attr: true})
+    @prop({attr: true})
     set for(value) {
         if (value && "string" === typeof value) {
             return document.querySelector(value);
@@ -168,7 +168,7 @@ export class Popup extends ComponentElement {
     // Called from constructor
     init() {
         // this._forPropWas = this.props.for;
-        this._bodyEv = null;
+        this._docEv = null;
         this.onPropsChange(this.position, "at");
         this.onPropsChange(this.position, "my");
     }
@@ -197,9 +197,9 @@ export class Popup extends ComponentElement {
             this.position();
 
             // Auto close? then setup body event
-            if (this.autoClose && !this._bodyEv) {
+            if (this.autoClose && !this._docEv) {
                 setTimeout(() => {
-                    this._bodyEv = domAddEventListener(document.body, "click", ev => {
+                    this._docEv = domAddEventListener(document, "click", ev => {
                         if (!this.contains(ev.target)) {
                             // FIXME: support onHide callback? maybe event?
 
