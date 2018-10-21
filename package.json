@@ -45,6 +45,7 @@
     "homepage": "https://github.com/purtuga/common-widget-elements#readme",
     "devDependencies": {
         "css-vars-element": "github:purtuga/css-vars-element",
+        "observables": "github:purtuga/observables",
         "project-base": "github:purtuga/project-base#beta/v2.0.0",
         "project-showcase": "github:purtuga/project-showcase"
     },
