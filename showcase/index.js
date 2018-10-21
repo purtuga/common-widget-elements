@@ -5,6 +5,7 @@ import {ContentAccess} from "../src/ContentAccess/ContentAccess";
 // import other showcases now so that they register themselves.
 import "./popup-showcase"
 import "./content-access-showcase"
+import "./icon-showcase"
 
 //========================================================
 Popup.define();
