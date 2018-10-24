@@ -20,6 +20,10 @@ const SOURCES = {
  *  ></i-con>
  * ```
  *
+ * __Supported CSS Variables__
+ *
+ * -    `--icon-size`: set custom icon size
+ *
  * @extends ComponentElement
  */
 export class Icon extends ComponentElement {
@@ -71,12 +75,12 @@ export class Icon extends ComponentElement {
         height: 3.0rem;
     }
     
-    .icon,
+    .i-con,
     svg {
       width: 100%;
       height: 100%;
     }
-    .icon {
+    .i-con {
         box-sizing: border-box;
     } 
 </style>
@@ -84,9 +88,10 @@ export class Icon extends ComponentElement {
     }
 
     /**
-     * An array of icons sources
+     * An array of icons sources. Object key is the value that should be used in
+     * the `from` attribute.
      *
-     * @returns {Object<String, Object>}
+     * @returns {Object<String, IconSource>}
      */
     static sources = SOURCES;
 
@@ -184,11 +189,12 @@ export class Icon extends ComponentElement {
 
 
 /**
- * An Icons Source definition
+ * An Icon Source definition
  *
  * @typedef {Object} IconSource
  * @property {Function} getIcon
- *  Must return a promise that resolves to an Element that represents the icon
+ *  Must return a promise that resolves to an Element that represents the icon.
+ *  This icon, if not an SVG, should have a CSS class name of `i-con`
  */
 
 export default Icon;

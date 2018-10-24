@@ -21,7 +21,7 @@ export const boxicons = {
                         return;
                     }
                     const template = createElement("template");
-                    template.innerHTML = `<span class="icon">${this.responseText}</span>`;
+                    template.innerHTML = `<span class="i-con">${this.responseText}</span>`;
                     resolve(template);
                 });
                 request.onerror = reject;
