@@ -1,10 +1,12 @@
 import {ComponentElement, prop, bind} from "component-element"
 import {boxicons} from "./source.boxicons";
+import {officeUiFabric} from "./source.office-ui-fabric"
 
 //=============================================================
 const STATE = Symbol("STATE");
 const SOURCES = {
-    boxicons
+    boxicons,
+    "office-ui-fabric": officeUiFabric
 };
 
 /**
@@ -55,6 +57,11 @@ export class Icon extends ComponentElement {
         height: var(--icon-size, 24px);
     }
     
+    .i-con-font {
+        font-size: 24px;
+        font-size: var(--icon-size, 24px);
+    }
+    
     /* -------------------------------------------
             SIZES
        ------------------------------------------- */
@@ -62,17 +69,32 @@ export class Icon extends ComponentElement {
         width: 0.8rem;
         height: 0.8rem;
     }
+    :host([size=xs]) .i-con-font {
+        font-size: 0.8rem;
+    }
+    
     :host([size=sm]) {
         width: 1.55rem;
         height: 1.55rem;
     }
+    :host([size=sm]) .i-con-font {
+        font-size: 1.55rem;
+    }
+    
     :host([size=md]) {
         width: 2.25rem;
         height: 2.25rem;
     }
+    :host([size=md]) .i-con-font {
+        font-size: 2.25rem;
+    }
+    
     :host([size=lg]) {
         width: 3.0rem;
         height: 3.0rem;
+    }
+    :host([size=lg]) .i-con-font {
+        font-size: 3.0rem;
     }
     
     .i-con,

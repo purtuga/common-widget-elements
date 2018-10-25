@@ -61,10 +61,13 @@ export class Popup extends ComponentElement {
     overflow: auto;
     display: none;
 
-    box-shadow: 0 8px 10px 1px rgba(0,0,0,0.14),
+    border: var(--theme-border, 1px solid);
+    border-color: var(--theme-color-1, #ECECEC);
+
+    box-shadow: var(--theme-box-shadow, 
+        0 8px 10px 1px rgba(0,0,0,0.14),
         0 3px 14px 2px rgba(0,0,0,0.12),
-        0 5px 5px -3px rgba(0,0,0,0.2);
-    box-shadow: var(--theme-box-shadow);
+        0 5px 5px -3px rgba(0,0,0,0.2));
 
     background-color: white;
     background-color: var(--theme-color-bg, white);
