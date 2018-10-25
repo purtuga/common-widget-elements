@@ -193,7 +193,10 @@ export class Icon extends ComponentElement {
             }
         }
 
-        if (props.name) {
+        if (props.name && props.from) {
+            state.name = props.name;
+            state.from = props.from;
+
             if (this.constructor.sources[props.from]) {
                 this.constructor.sources[props.from].getIcon(this.props, this).then(this._showIconElement);
             }
@@ -202,7 +205,7 @@ export class Icon extends ComponentElement {
 
     @bind
     _showIconElement(iconEle) {
-        if (iconEle) {
+        if (iconEle && this.props.name === this[STATE].name) {
             this[STATE].$icon = iconEle;
             this.$ui.appendChild(iconEle);
         }

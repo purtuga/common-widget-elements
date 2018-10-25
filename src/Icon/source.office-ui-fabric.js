@@ -1,23 +1,25 @@
 import { setAttribute, createElement, createTextNode } from "common-micro-libs/src/jsutils/runtime-aliases"
-import * as iconMap from "./source.office-ui-fabric-icons"
+import * as iconMap from "./source.office-ui-fabric-icon-codes"
 
 
 //===========================================================================
 const OFFICE = Symbol("OFFICE");
 const ICON_TEMPLATE = document.createElement("template");
+
 ICON_TEMPLATE.innerHTML = `<span class="i-con i-con-font ms-Icon"></span>`;
 
-// Issue with @font-face: https://bugs.chromium.org/p/chromium/issues/detail?id=336876#c28
-
 // Adjust Icons whose name had to be adjusted in order to be compliant to a const name
-iconMap["12PointStar"] = iconMap.twelvePointStar;
-iconMap["6PointStar"] = iconMap.sixPointStar;
+const aliases = {
+    "12PointStar": iconMap.twelvePointStar,
+    "6PointStar": iconMap.sixPointStar
+};
 
 export const officeUiFabric = {
     cdnUrl: "//static2.sharepointonline.com/files/fabric/assets/icons",
     isIconLoaded: false,
     iconMap,
     getIcon(props, iconInstance) {
+        // Load the font if needed.
         if (!this.isIconLoaded) {
             this.isIconLoaded = true;
             if (!document.head.querySelector("style[data-id='FabricMDL2Icons'")) {
@@ -25,19 +27,17 @@ export const officeUiFabric = {
             }
         }
 
-        // Setup styles for component?
+        // Setup the instance
+        // Create the Internal element that will be used to display the icon
         if (!iconInstance[OFFICE]) {
-            iconInstance[OFFICE] = true;
-            const styleEle = document.createElement("style");
-            styleEle.appendChild(
-                document.createTextNode(this.getStyles())
-            );
-            iconInstance.$ui.appendChild(styleEle);
-            // document.head.appendChild(styleEle);
+            iconInstance[OFFICE] = {
+                $icon: document.importNode(ICON_TEMPLATE.content, true).firstChild
+            };
+            iconInstance.$ui.appendChild(getStyleEle(this.getStyles()));
+
         }
-        const icon = document.importNode(ICON_TEMPLATE.content, true).firstChild;
-        icon.textContent = this.iconMap[props.name];
-        return Promise.resolve(icon);
+        iconInstance[OFFICE].$icon.textContent = this.iconMap[props.name] || aliases[props.name];
+        return Promise.resolve(iconInstance[OFFICE].$icon);
     },
     fontFaceCss() {
         return `
@@ -66,13 +66,18 @@ ${this.fontFaceCss()}
     }
 };
 
-
-function loadFont(fontFaceCss, id) {
+function getStyleEle(cssCode, id) {
     const styleEle = createElement("style");
     styleEle.type = "text/css";
-    styleEle.appendChild(createTextNode(fontFaceCss));
+    styleEle.appendChild(createTextNode(cssCode));
     if (id) {
         setAttribute(styleEle, "data-id", id);
     }
-    document.head.appendChild(styleEle);
+    return styleEle;
+}
+
+
+function loadFont(fontFaceCss, id) {
+    // Issue with @font-face: https://bugs.chromium.org/p/chromium/issues/detail?id=336876#c28
+    document.head.appendChild(getStyleEle(fontFaceCss, id));
 }
