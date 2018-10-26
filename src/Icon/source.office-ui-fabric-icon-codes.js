@@ -1,6 +1,8 @@
 // Taken from:
 // https://github.com/OfficeDev/office-ui-fabric-core/blob/master/src/sass/variables/_Icon.Variables.scss
 // An adjusted to ES6 exports
+// Also note that some icon names were changed so that they could
+// be used as a `const` name (ex. 12PointStart - twelvePointStar)
 export const twelvePointStar = '\uF505';
 export const sixPointStar = '\uF504';
 export const AADLogo = '\uED68';

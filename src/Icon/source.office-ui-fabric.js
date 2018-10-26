@@ -1,10 +1,10 @@
-import { setAttribute, createElement, createTextNode } from "common-micro-libs/src/jsutils/runtime-aliases"
+import { createElement, doc } from "common-micro-libs/src/jsutils/runtime-aliases"
 import * as iconMap from "./source.office-ui-fabric-icon-codes"
 
 
 //===========================================================================
-const OFFICE = Symbol("OFFICE");
-const ICON_TEMPLATE = document.createElement("template");
+const OFFICE_ICON_ELEMENT = Symbol("OFFICE");
+const ICON_TEMPLATE = createElement("template");
 
 ICON_TEMPLATE.innerHTML = `<span class="i-con i-con-font ms-Icon"></span>`;
 
@@ -14,32 +14,33 @@ const aliases = {
     "6PointStar": iconMap.sixPointStar
 };
 
+
+/**
+ * Font support for [Office UI Fabric](https://developer.microsoft.com/en-us/fabric#/styles/icons)
+ *
+ * @type {IconSource}
+ */
 export const officeUiFabric = {
     cdnUrl: "//static2.sharepointonline.com/files/fabric/assets/icons",
     isIconLoaded: false,
     iconMap,
-    getIcon(props, iconInstance) {
-        // Load the font if needed.
-        if (!this.isIconLoaded) {
-            this.isIconLoaded = true;
-            if (!document.head.querySelector("style[data-id='FabricMDL2Icons'")) {
-                loadFont(this.fontFaceCss(), "FabricMDL2Icons");
-            }
-        }
 
+    doSetup(IconClass) {
+        IconClass.setupFont(this.getFontFaceCss());
+    },
+
+    getIcon(props, iconInstance) {
         // Setup the instance
         // Create the Internal element that will be used to display the icon
-        if (!iconInstance[OFFICE]) {
-            iconInstance[OFFICE] = {
-                $icon: document.importNode(ICON_TEMPLATE.content, true).firstChild
-            };
-            iconInstance.$ui.appendChild(getStyleEle(this.getStyles()));
+        if (!iconInstance[OFFICE_ICON_ELEMENT]) {
+            iconInstance[OFFICE_ICON_ELEMENT] = doc.importNode(ICON_TEMPLATE.content, true).firstChild;
 
         }
-        iconInstance[OFFICE].$icon.textContent = this.iconMap[props.name] || aliases[props.name];
-        return Promise.resolve(iconInstance[OFFICE].$icon);
+        iconInstance[OFFICE_ICON_ELEMENT].textContent = props.code || this.iconMap[props.name] || aliases[props.name];
+        return Promise.resolve(iconInstance[OFFICE_ICON_ELEMENT]);
     },
-    fontFaceCss() {
+
+    getFontFaceCss() {
         return `
 @font-face {
     font-family: FabricMDL2Icons;
@@ -51,9 +52,10 @@ export const officeUiFabric = {
 }
 `;
     },
+
     getStyles() {
         return `
-${this.fontFaceCss()}
+${this.getFontFaceCss()}
 
 .ms-Icon {
     display: inline-block;
@@ -65,19 +67,3 @@ ${this.fontFaceCss()}
 `;
     }
 };
-
-function getStyleEle(cssCode, id) {
-    const styleEle = createElement("style");
-    styleEle.type = "text/css";
-    styleEle.appendChild(createTextNode(cssCode));
-    if (id) {
-        setAttribute(styleEle, "data-id", id);
-    }
-    return styleEle;
-}
-
-
-function loadFont(fontFaceCss, id) {
-    // Issue with @font-face: https://bugs.chromium.org/p/chromium/issues/detail?id=336876#c28
-    document.head.appendChild(getStyleEle(fontFaceCss, id));
-}

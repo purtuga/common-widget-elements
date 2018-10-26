@@ -11,6 +11,10 @@ A popup widget
 A content access widget that can block user access. Show modal overlay and intercepts keyboard tabbing.
 
 
+## Icon: `<i-con>`
+
+Show an icon from a source. Component allows for multiple sources to be defined. For more on defining sources, see [Sources Readme file](src/Icon/SOURCES.md).
+
 
 # Distribution Bundles
 
