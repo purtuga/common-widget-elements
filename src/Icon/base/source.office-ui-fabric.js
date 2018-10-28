@@ -3,11 +3,16 @@ import { createElement, doc } from "common-micro-libs/src/jsutils/runtime-aliase
 //===========================================================================
 const OFFICE_ICON_ELEMENT = Symbol("OFFICE");
 const ICON_TEMPLATE = createElement("template");
+const IS_CODEPOINT = /^U\+/i;
+let fromCodePoint;
 
 ICON_TEMPLATE.innerHTML = `<span class="i-con i-con-font ms-Icon"></span>`;
 
 /**
  * Font support for [Office UI Fabric](https://developer.microsoft.com/en-us/fabric#/styles/icons)
+ * Icon can be defined by name, using the `iconMap` property below, or by `code` - the Unicode that
+ * represents the icon. The `code` value can the actual unicode character (the escape sequence -
+ * ex. `\uF505`) or the Unicode codepoint (ex. `U+F505`).
  *
  * @type {IconSource}
  */
@@ -16,7 +21,10 @@ export const officeUiFabric = {
     isIconLoaded: false,
 
     /**
-     * A map (object) of "icon name" to "icon Unicode" that represents the icon
+     * A map (object) of "icon name" to "icon Unicode code point" that represents the icon.
+     * (NOTE: unicode should be represented as `U+<code>`, not the UTF16 escaped sequence).
+     * See `source.office-ui-fabric-icon-codes.js` for a list of code along with names, which
+     * can be used set this object.
      *
      * @type {Object}
      */
@@ -31,17 +39,22 @@ export const officeUiFabric = {
     iconAliases: {},
 
     doSetup(IconClass) {
+        fromCodePoint = IconClass.fromCodePoint;
         IconClass.setupFont(this.getFontFaceCss());
     },
 
-    getIcon(props, iconInstance) {
+    getIcon({ code, name }, iconInstance) {
         // Setup the instance
         // Create the Internal element that will be used to display the icon
         if (!iconInstance[OFFICE_ICON_ELEMENT]) {
             iconInstance[OFFICE_ICON_ELEMENT] = doc.importNode(ICON_TEMPLATE.content, true).firstChild;
 
         }
-        iconInstance[OFFICE_ICON_ELEMENT].textContent = props.code || this.iconMap[props.name] || this.iconAliases[props.name];
+        iconInstance[OFFICE_ICON_ELEMENT].textContent = code
+            ? IS_CODEPOINT.test(code)
+                ? fromCodePoint(code)
+                : code
+            : fromCodePoint(this.iconMap[name] || this.iconAliases[name]);
         return Promise.resolve(iconInstance[OFFICE_ICON_ELEMENT]);
     },
 

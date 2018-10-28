@@ -8,6 +8,9 @@ const STATE = Symbol("STATE");
 const SOURCES = {};
 const CACHE = Object.create(null);
 
+// Aliases
+const fromCharCode = String.fromCharCode;
+
 /**
  * Display icons from various sources.
  *
@@ -163,6 +166,39 @@ export class Icon extends ComponentElement {
      */
     static setupFont(fontFaceCss) {
         doc.head.appendChild(getStyleEle(fontFaceCss));
+    }
+
+    /**
+     * Given an HEX Unicode codepoint, returns UTF16 surrogate pairs.
+     *
+     * @param   string  generic codepoint, i.e. '1F4A9'
+     * @return  string  codepoint transformed into utf16 surrogates pair,
+     *          i.e. \uD83D\uDCA9
+     *
+     * @link https://unpkg.com/twemoji@11.2.0/2/twemoji.js
+     *
+     * @example
+     *  twemoji.convert.fromCodePoint('1f1e8');
+     *  // "\ud83c\udde8"
+     *
+     *  '1f1e8-1f1f3'.split('-').map(twemoji.convert.fromCodePoint).join('')
+     *  // "\ud83c\udde8\ud83c\uddf3"
+     */
+    static fromCodePoint(codepoint) {
+        // From: https://unpkg.com/twemoji@11.2.0/2/twemoji.js
+        //       But changed to string up `U+` if its present in the given value
+
+        // TODO: should we momoize?
+        var code = typeof codepoint === 'string' ?
+            parseInt(codepoint.replace(/U\+/i, ""), 16) : codepoint;
+        if (code < 0x10000) {
+            return fromCharCode(code);
+        }
+        code -= 0x10000;
+        return fromCharCode(
+            0xD800 + (code >> 10),
+            0xDC00 + (code & 0x3FF)
+        );
     }
 
     //-------------------------------------------------------------

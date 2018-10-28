@@ -49,7 +49,7 @@ ${
         "ActivateOrders"
     ].reduce((content, iconName) => content += `<i-con from="office-ui-fabric" name="${ iconName }"></i-con>`, "")
 }
-<p>These are showing using the icon code instead of name</p>
+<p>These are shown using the icon Unicode escaped sequence (ex. <code>\\uF42B</code>) instead of name</p>
 ${
     [
         '\uF42B',
@@ -63,6 +63,22 @@ ${
         '\uEB6B',
         '\uEF8D',
         '\uE8F8'
+    ].reduce((content, iconCode) => content += `<i-con from="office-ui-fabric" code="${ iconCode }"></i-con>`, "")
+}
+<p>These are shown using the icon Unicode code point (ex. <code>U+F42B</code>) instead of name</p>
+${
+    [
+        'U+F42B',
+        'U+F2AC',
+        'U+F444',
+        'U+E73F',
+        'U+EC1B',
+        'U+F543',
+        'U+E9AA',
+        'U+E9AB',
+        'U+EB6B',
+        'U+EF8D',
+        'U+E8F8'
     ].reduce((content, iconCode) => content += `<i-con from="office-ui-fabric" code="${ iconCode }"></i-con>`, "")
 }
 `;
