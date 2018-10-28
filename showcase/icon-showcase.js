@@ -5,8 +5,30 @@ import {showcase} from "project-showcase"
 const GROUP_NAME = "Icon";
 let uiFrabricNameMapDone = false;
 
-showcase({name: "Sources", group: GROUP_NAME}, function ($content) {
-    $content.innerHTML = `
+//-----------------------------------------------------------------------
+//  TESTS
+//-----------------------------------------------------------------------
+showcase({name: "Icon Tests", group: GROUP_NAME}, function($content) {
+    const testRunner = document.createElement("showcase-test-runner");
+    $content.appendChild(testRunner);
+    testRunner.tests = [
+        "common-widget-elements.js",
+        "src/Icon/icon.test.js"
+    ];
+    testRunner.autoRun = true;
+});
+
+
+//-----------------------------------------------------------------------
+//  ICON SOURCES
+//-----------------------------------------------------------------------
+showcase(
+    {
+        name: "Sources",
+        group: GROUP_NAME
+    },
+    function ($content) {
+        $content.innerHTML = `
 <style>
     i-con {
         margin: 1em;
@@ -14,11 +36,13 @@ showcase({name: "Sources", group: GROUP_NAME}, function ($content) {
     }
 </style>
 `;
-    setupBoxIcons($content);
-    setupOfficeUiFabric($content);
-    setupTwenoji($content);
-});
+        setupBoxIcons($content);
+        setupOfficeUiFabric($content);
+        setupTwenoji($content);
+    }
+);
 
+// Setup showcase for Boxicons
 function setupBoxIcons($cntr) {
     const div = document.createElement("div");
     div.innerHTML = `<h3>BoxIcons</h3>
@@ -32,6 +56,7 @@ ${
     $cntr.appendChild(div);
 }
 
+// Setup icons for Office UI Fabric
 function setupOfficeUiFabric($cntr) {
     const div = document.createElement("div");
     $cntr.appendChild(div);
@@ -127,7 +152,7 @@ ${
     }
 }
 
-
+// Setup for Twenmoji
 function setupTwenoji($cntr) {
     const div = document.createElement("div");
     div.innerHTML = `
