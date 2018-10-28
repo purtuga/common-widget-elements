@@ -10,15 +10,16 @@ const TEMPLATE = createElement("template");
  */
 export const boxicons = {
     cdnUrl: "//unpkg.com/boxicons@latest/svg",
-    getIcon(props, instance) {
+    getIcon(props, iconInstance) {
         if (props.name) {
             const iconUrl = `${this.cdnUrl}/regular/bx-${props.name}.svg`;
 
-            return instance.constructor
+            return iconInstance.constructor
                 .fetchSvg(iconUrl)
                 .then(returnNewElement)
                 .catch(handleReject);
         }
+        return Promise.reject(new Error("boxicon 'name' missing"));
     }
 };
 
