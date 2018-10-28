@@ -3,6 +3,7 @@ import {showcase} from "project-showcase"
 
 //========================================================
 const GROUP_NAME = "Icon";
+let uiFrabricNameMapDone = false;
 
 showcase({name: "Sources", group: GROUP_NAME}, function ($content) {
     $content.innerHTML = `
@@ -33,7 +34,10 @@ ${
 
 function setupOfficeUiFabric($cntr) {
     const div = document.createElement("div");
-    div.innerHTML = `
+    $cntr.appendChild(div);
+
+    const insertIcons = () => {
+        div.innerHTML = `
 <h3>Office UI Fabric</h3>
 <p><a href="https://developer.microsoft.com/en-us/fabric#/styles/icons">developer.microsoft.com/en-us/fabric</a></p>
 ${
@@ -82,7 +86,45 @@ ${
     ].reduce((content, iconCode) => content += `<i-con from="office-ui-fabric" code="${ iconCode }"></i-con>`, "")
 }
 `;
-    $cntr.appendChild(div);
+    };
+
+    // If we need to first add the name-to-codepoint mapping, then defer setup
+    if (!uiFrabricNameMapDone) {
+        customElements.whenDefined("i-con").then(() => {
+            uiFrabricNameMapDone = true;
+            const OfficeUIFabricIconSource = customElements.get("i-con").sources["office-ui-fabric"];
+
+            Object.assign(
+                OfficeUIFabricIconSource.iconMap,
+                {
+                    twelvePointStar: 'U+F505',
+                    sixPointStar: 'U+F504',
+                    AADLogo: 'U+ED68',
+                    Accept: 'U+E8FB',
+                    AccessLogo: 'U+ED69',
+                    AccessLogoFill: 'U+F1DB',
+                    AccountManagement: 'U+F55C',
+                    Accounts: 'U+E910',
+                    ActivateOrders: 'U+EFE0',
+                    ActivityFeed: 'U+F056',
+                    Add: 'U+E710'
+                }
+            );
+
+            // Insert alias
+            Object.assign(
+                OfficeUIFabricIconSource.iconAliases,
+                {
+                    "12PointStar": OfficeUIFabricIconSource.iconMap.twelvePointStar,
+                    "6PointStar": OfficeUIFabricIconSource.iconMap.sixPointStar
+                }
+            );
+
+            insertIcons();
+        });
+    } else {
+        insertIcons();
+    }
 }
 
 
