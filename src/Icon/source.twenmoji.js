@@ -1,4 +1,4 @@
-import {consoleError, createElement} from "common-micro-libs";
+import {consoleError, createElement} from "common-micro-libs/src/jsutils/runtime-aliases";
 
 //======================================================================
 const TEMPLATE = createElement("template");

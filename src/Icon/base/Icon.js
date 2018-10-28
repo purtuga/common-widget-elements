@@ -1,5 +1,5 @@
 import {ComponentElement, prop, bind} from "component-element"
-import {appendChild, createElement, createTextNode, setAttribute, doc} from "common-micro-libs";
+import {appendChild, createElement, createTextNode, setAttribute, doc} from "common-micro-libs/src/jsutils/runtime-aliases";
 
 //=============================================================
 const SOURCE_SETUP = Symbol("SOURCE_SETUP");
