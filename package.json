@@ -23,7 +23,7 @@
         "build:prod:wc:legacy:min": "webpack --config node_modules/project-base/configs/webpack.config.js --env.build=prod.wc.legacy.minified",
         "build:prod:wc:legacy:non-min": "webpack --config node_modules/project-base/configs/webpack.config.js --env.build=prod.wc.legacy.non-minified",
         "build:apiDocs": "jsdoc -c node_modules/project-base/configs/jsdoc.conf.json",
-        "dist": "webpack --config node_modules/project-base/configs/webpack.config.js --env.build=prod.minified --env.build=prod.legacy.minified --env.build=prod.esm.minified",
+        "dist": "webpack --config node_modules/project-base/configs/webpack.config.js --env.build=prod.minified --env.build=prod.legacy.minified --env.build=prod.esm.minified --env.build=prod.wc.minified --env.build=prod.wc.legacy.minified",
         "setup:dev": "node node_modules/project-base/scripts/create-dev&&npm run setup:dev:showcase",
         "setup:dev:showcase": "node node_modules/project-showcase/scripts/create-dev",
         "test": "tape -r esm test/**/*.js",

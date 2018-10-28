@@ -1,6 +1,9 @@
 import {consoleError, createElement} from "common-micro-libs";
 
+//======================================================================
 const TEMPLATE = createElement("template");
+
+// FIXME: create emoji tables - similar to: https://unicode.org/emoji/charts/full-emoji-list.html
 
 /**
  * Shows Emoji from Twenmoji.
@@ -23,8 +26,6 @@ export const twenmoji = {
         return Promise.reject(new Error("twemoji 'node' missing"));
     }
 };
-
-// Possible conversion functions from here: https://unpkg.com/twemoji@11.2.0/2/twemoji.js
 
 function getSvgImgNameFromCode(code) {
     return code
