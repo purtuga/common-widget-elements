@@ -98,6 +98,13 @@ export class Icon extends ComponentElement {
     :host([size=lg]) .i-con-font {
         font-size: 3.0rem;
     }
+    :host([size=xl]) {
+        width: 3.75rem;
+        height: 3.75rem;
+    }
+    :host([size=xl]) .i-con-font {
+        font-size: 3.75rem;
+    }
     
     .i-con,
     svg {
@@ -324,6 +331,19 @@ export class Icon extends ComponentElement {
     @bind
     _showIconElement(iconEle) {
         if (iconEle && this.props.name === this[STATE].name) {
+            // If iconEle is a documentFragment, then use only its first element
+            // TODO: maybe in the future support everything in the fagment
+            if (iconEle.nodeType === 11) {
+                iconEle = iconEle.firstChild;
+
+                if (!iconEle) {
+                    return;
+                }
+            }
+
+            this[STATE].$icon = iconEle;
+            appendChild(this.$ui, iconEle);
+
             // If this source requires some styles to be injected, do it now
             if (this[SOURCE_STYLES][this[STATE].from]) {
                 this.$ui.insertBefore(
@@ -331,9 +351,6 @@ export class Icon extends ComponentElement {
                     this[STATE].$icon
                 );
             }
-
-            this[STATE].$icon = iconEle;
-            appendChild(this.$ui, iconEle);
         }
     }
 }

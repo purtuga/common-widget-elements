@@ -11,11 +11,12 @@ let uiFrabricNameMapDone = false;
 showcase({name: "Icon Tests", group: GROUP_NAME}, function($content) {
     const testRunner = document.createElement("showcase-test-runner");
     $content.appendChild(testRunner);
+    testRunner.setAttribute("auto-run", true);
+    testRunner.style.height = window.innerHeight - 150 + "px";
     testRunner.tests = [
         "common-widget-elements.js",
-        "src/Icon/icon.test.js"
+        "test/icon.test.js"
     ];
-    testRunner.autoRun = true;
 });
 
 
