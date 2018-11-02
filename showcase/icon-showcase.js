@@ -170,7 +170,7 @@ ${
         "U+1F929",
         "U+1F618",
         "U+1F617"
-    ].reduce((content, emojiHexCode) => content += `<i-con from="twenmoji" code="${ emojiHexCode }"></i-con>`, "")
+    ].reduce((content, emojiHexCode) => content += `<i-con from="twemoji" code="${ emojiHexCode }"></i-con>`, "")
 }
 `;
     $cntr.appendChild(div);

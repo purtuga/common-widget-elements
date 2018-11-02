@@ -6,10 +6,10 @@
 import Icon from "./base/Icon";
 import {boxicons} from "./source.boxicons";
 import {officeUiFabric} from "./source.office-ui-fabric";
-import {twenmoji} from "./source.twenmoji";
+import {twemoji} from "./source.twemoji";
 
 Icon.sources.boxicons = boxicons;
-Icon.sources.twenmoji = twenmoji;
+Icon.sources.twemoji = twemoji;
 Icon.sources["office-ui-fabric"] = officeUiFabric;
 
 

@@ -12,7 +12,7 @@ const TEMPLATE = createElement("template");
  *
  * @type {IconSource}
  */
-export const twenmoji = {
+export const twemoji = {
     cdnUrl: "//unpkg.com/twemoji@latest/2/svg",
     getIcon(props, iconInstance) {
         if (props.code) {
