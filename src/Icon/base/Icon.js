@@ -182,7 +182,7 @@ export class Icon extends ComponentElement {
     }
 
     willRender() {
-        return this._renderDone;
+        return !this._renderDone;
     }
 
     render() {

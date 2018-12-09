@@ -40,10 +40,6 @@ export class ContentAccess extends ComponentElement {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ STATIC PROPERTIES ~~~~~
     static tagName = "content-access";
 
-    willRender() {
-        return this._renderDone;
-    }
-
     // static get delayDestroy() {}
     // static get useShadow() {}
     // static get shadowMode() {}
@@ -106,6 +102,10 @@ export class ContentAccess extends ComponentElement {
     // called when element is attached to dom
     didMount() {
         this._handleBlock();
+    }
+
+    willRender() {
+        return !this._renderDone;
     }
 
     render() {
