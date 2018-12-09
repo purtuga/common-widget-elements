@@ -1,13 +1,13 @@
-import {ComponentElement, prop, bind} from "component-element"
-import domPosition from "common-micro-libs/src/domutils/domPosition";
-import domAddEventListener from "common-micro-libs/src/domutils/domAddEventListener";
+import {ComponentElement, prop, bind} from "@purtuga/component-element/src/index.js"
+import domPosition from "@purtuga/common/src/domutils/domPosition.js";
+import domAddEventListener from "@purtuga/common/src/domutils/domAddEventListener.js";
 
 //=====================================================================================
 const removeBodyEvent = eleInst => {
-    if (eleInst._docEv) {
+    if (eleInst._docEv && eleInst._docEv.remove) {
         eleInst._docEv.remove();
-        eleInst._docEv = null;
     }
+    eleInst._docEv = null;
 };
 
 
@@ -43,65 +43,15 @@ export class Popup extends ComponentElement {
     //-------------------------------------------------------------
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ STATIC PROPERTIES ~~~~~
-    static get tagName() {
-        return "pop-up";
-    }
-
-
-    static get template() {
-        return `
-<style>
-:host {
-    box-sizing: border-box;
-    position: absolute;
-    min-height: 2em;
-    width: 15em;
-    max-height: 15em;
-    z-index: 5000;
-    overflow: auto;
-    display: none;
-
-    border: var(--theme-border, 1px solid);
-    border-color: var(--theme-color-1, #ECECEC);
-
-    box-shadow: var(--theme-box-shadow, 
-        0 8px 10px 1px rgba(0,0,0,0.14),
-        0 3px 14px 2px rgba(0,0,0,0.12),
-        0 5px 5px -3px rgba(0,0,0,0.2));
-
-    background-color: white;
-    background-color: var(--theme-color-bg, white);
-
-    color: black;
-    color: var(--theme-color-fg, black);
-
-    padding: 0.5em;
-    padding: var(--theme-spacing-2, 0.5em);
-}
-:host::-webkit-scrollbar {
-    width:              0.5em;
-    background-color:   var(--theme-color-1, #F5F5F5);
-}
-:host::-webkit-scrollbar-thumb {
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
-    background-color  : var(--theme-color-6, #555);
-}
-:host([show]) {
-    display: block;
-}
-</style>
-<div><slot></slot></div>`;
-    }
+    static tagName = "pop-up";
 
     // static get delayDestroy() {}
     // static get useShadow() {}
     // static get shadowMode() {}
     // static getEventInitOptions(){}
-    // static get observedAttributes() {}
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ STATIC METHODS ~~~~~
 
-    // static renderTemplate(ele) {}
     // static define(name) {}
 
 
@@ -148,7 +98,7 @@ export class Popup extends ComponentElement {
     /**
      * The edge of the popup that should be used when position it next to the
      * `for` element. Default is `top left`.
-     * See `common-micro-libs/src/domUtils/domPosition` for other possible values
+     * See `@purtuga/common/src/domUtils/domPosition` for other possible values
      *
      * @property {string} my
      */
@@ -159,7 +109,7 @@ export class Popup extends ComponentElement {
     /**
      * The edge of the `for` element that will be used to position the popup against.
      * Default is `bottom left`.
-     * See `common-micro-libs/src/domUtils/domPosition` for other possible values
+     * See `@purtuga/common/src/domUtils/domPosition` for other possible values
      *
      * @property {string} at
      */
@@ -169,29 +119,71 @@ export class Popup extends ComponentElement {
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  LIFE CYCLE HOOKS  ~~~~~
     // Called from constructor
-    init() {
-        // this._forPropWas = this.props.for;
+    didInit() {
         this._docEv = null;
         this.onPropsChange(this.position, "at");
         this.onPropsChange(this.position, "my");
-    }
-
-    // Called when all required `props` have been provided
-    ready() {
         this.onPropsChange(this._handleShowProp);
-        this._handleShowProp();
-        this.onDestroy(() => removeBodyEvent(this));
     }
 
-    // Called if required fields are removed
-    // unready() {}
+    willRender() {
+        return this._renderDone;
+    }
 
-    // called when element is attached to dom
-    // mounted() {}
+    render() {
+        this._renderDone = true;
 
-    // called when element is removed from dom
-    // unmounted() {}
+        return `
+<style>
+:host {
+    box-sizing: border-box;
+    position: absolute;
+    min-height: 2em;
+    width: 15em;
+    max-height: 15em;
+    z-index: 5000;
+    overflow: auto;
+    display: none;
 
+    border: var(--theme-border, 1px solid);
+    border-color: var(--theme-color-1, #ECECEC);
+
+    box-shadow: var(--theme-box-shadow, 
+        0 8px 10px 1px rgba(0,0,0,0.14),
+        0 3px 14px 2px rgba(0,0,0,0.12),
+        0 5px 5px -3px rgba(0,0,0,0.2));
+
+    background-color: white;
+    background-color: var(--theme-color-bg, white);
+
+    color: black;
+    color: var(--theme-color-fg, black);
+
+    padding: 0.5em;
+    padding: var(--theme-spacing-2, 0.5em);
+}
+:host::-webkit-scrollbar {
+    width:              0.5em;
+    background-color:   var(--theme-color-1, #F5F5F5);
+}
+:host::-webkit-scrollbar-thumb {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+    background-color  : var(--theme-color-6, #555);
+}
+:host([show]) {
+    display: block;
+}
+</style>
+<div><slot></slot></div>`;
+    }
+
+    didRender() {
+        this._handleShowProp();
+    }
+
+    didUnmount() {
+        removeBodyEvent(this);
+    }
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     @bind
@@ -201,6 +193,7 @@ export class Popup extends ComponentElement {
 
             // Auto close? then setup body event
             if (this.autoClose && !this._docEv) {
+                this._docEv = true;
                 setTimeout(() => {
                     this._docEv = domAddEventListener(document, "click", ev => {
                         if (!this.contains(ev.target)) {

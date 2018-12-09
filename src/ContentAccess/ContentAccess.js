@@ -1,6 +1,6 @@
-import {ComponentElement, STATE_SYMBOL, prop, bind} from "component-element"
-import {domAddEventListener} from "common-micro-libs/src/domutils/domAddEventListener"
-import {domInsertBefore} from "common-micro-libs/src/domutils/domInsertBefore"
+import {ComponentElement, STATE_SYMBOL, prop, bind} from "@purtuga/component-element/src/index.js"
+import {domAddEventListener} from "@purtuga/common/src/domutils/domAddEventListener.js"
+import {domInsertBefore} from "@purtuga/common/src/domutils/domInsertBefore.js"
 
 
 //=========================================================================
@@ -38,11 +38,79 @@ export class ContentAccess extends ComponentElement {
     //-------------------------------------------------------------
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ STATIC PROPERTIES ~~~~~
-    static get tagName() {
-        return "content-access";
+    static tagName = "content-access";
+
+    willRender() {
+        return this._renderDone;
     }
 
-    static get template() {
+    // static get delayDestroy() {}
+    // static get useShadow() {}
+    // static get shadowMode() {}
+    // static getEventInitOptions(){}
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ STATIC METHODS ~~~~~
+
+    // static define(name) {}
+
+
+    //-------------------------------------------------------------
+    //
+    //                                            INSTANCE MEMBERS
+    //
+    //-------------------------------------------------------------
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  PROPS AND ATTRIBUTES  ~~~~
+
+    /**
+     * Attribute that when present on the element, will make this
+     * element visible and content around it (same parent) non-accessible
+     *
+     * @property
+     * @type Boolean
+     */
+    @prop({attr: true, boolean: true})
+    get block() { return false; }
+
+
+    /**
+     * When attribute present on element, then the behaviour of this component
+     * changes to making it `position:absolute` and to fill the parent's space.
+     * The tab control is applied to all content of the parent element.
+     * Also: Any content (elements) placed inside of the `content-access` will
+     * be visible and accessible to the user - similar to how modal dialogs work.
+     *
+     * @property
+     * @type Boolean
+     */
+    @prop({attr: true, boolean: true})
+    get onParent() { return false; }
+
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  LIFE CYCLE HOOKS  ~~~~~
+    // Called from constructor
+    didInit() {
+        this[STATE_SYMBOL] = {
+            [INTERCEPTOR_TOP_1]: null,
+            [INTERCEPTOR_TOP_2]: null,
+            [INTERCEPTOR_BOTTOM_1]: null,
+            [INTERCEPTOR_BOTTOM_2]: null,
+            isRefocusing: false
+        };
+        this.onPropsChange(this._handleBlock, "block");
+        this.onPropsChange(this._handleBlock, "onParent");
+        domAddEventListener(this, "click", this);
+    }
+
+
+    // called when element is attached to dom
+    didMount() {
+        this._handleBlock();
+    }
+
+    render() {
+        this._renderDone = true;
+
         return `
 <style>
     :host {
@@ -93,83 +161,7 @@ export class ContentAccess extends ComponentElement {
 `;
     }
 
-    // static get delayDestroy() {}
-    // static get useShadow() {}
-    // static get shadowMode() {}
-    // static getEventInitOptions(){}
-    // static get observedAttributes() {}
-
-    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ STATIC METHODS ~~~~~
-
-    // static renderTemplate(ele) {}
-    // static define(name) {}
-
-
-    //-------------------------------------------------------------
-    //
-    //                                            INSTANCE MEMBERS
-    //
-    //-------------------------------------------------------------
-
-    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  PROPS AND ATTRIBUTES  ~~~~
-
-    /**
-     * Attribute that when present on the element, will make this
-     * element visible and content around it (same parent) non-accessible
-     *
-     * @property
-     * @type Boolean
-     */
-    @prop({attr: true, boolean: true})
-    get block() { return false; }
-
-
-    /**
-     * When attribute present on element, then the behaviour of this component
-     * changes to making it `position:absolute` and to fill the parent's space.
-     * The tab control is applied to all content of the parent element.
-     * Also: Any content (elements) placed inside of the `content-access` will
-     * be visible and accessible to the user - similar to how modal dialogs work.
-     *
-     * @property
-     * @type Boolean
-     */
-    @prop({attr: true, boolean: true})
-    get onParent() { return false; }
-
-
-    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  LIFE CYCLE HOOKS  ~~~~~
-    // Called from constructor
-    init() {
-        this[STATE_SYMBOL] = {
-            [INTERCEPTOR_TOP_1]: null,
-            [INTERCEPTOR_TOP_2]: null,
-            [INTERCEPTOR_BOTTOM_1]: null,
-            [INTERCEPTOR_BOTTOM_2]: null,
-            isRefocusing: false
-        };
-        this.onPropsChange(this._handleBlock, "block");
-        this.onPropsChange(this._handleBlock, "onParent");
-        domAddEventListener(this, "click", this);
-    }
-
-
-    // Called when all required `props` have been provided
-    // ready() {}
-
-    // Called if required fields are removed
-    // unready() {}
-
-    // called when element is attached to dom
-    mounted() {
-        this._handleBlock();
-    }
-
-    // called when element is removed from dom
-    // unmounted() {}
-
-    destroy() {
-        super.destroy();
+    didDestroy() {
         removeTabInterceptors(this);
     }
 

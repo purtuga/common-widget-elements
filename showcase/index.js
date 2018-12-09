@@ -1,11 +1,11 @@
-import {showcase} from "project-showcase"
-import "css-vars-element/src/import"
-import "../src/import"
+import {showcase} from "@purtuga/project-showcase/src/index.js"
+import "@purtuga/css-vars-element/src/import.js"
+import "../src/import.js"
 
 // import other showcases now so that they register themselves.
-import "./popup-showcase"
-import "./content-access-showcase"
-import "./icon-showcase"
+import "./popup-showcase.js"
+import "./content-access-showcase.js"
+import "./icon-showcase.js"
 
 //========================================================
 

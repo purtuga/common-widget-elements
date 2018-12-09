@@ -1,4 +1,4 @@
-import { createElement, doc } from "common-micro-libs/src/jsutils/runtime-aliases"
+import { createElement, doc } from "@purtuga/common/src/jsutils/runtime-aliases.js"
 
 //===========================================================================
 const OFFICE_ICON_ELEMENT = Symbol("OFFICE");

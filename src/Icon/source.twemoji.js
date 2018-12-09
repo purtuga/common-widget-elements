@@ -1,4 +1,4 @@
-import {consoleError, createElement} from "common-micro-libs/src/jsutils/runtime-aliases";
+import {consoleError, createElement} from "@purtuga/common/src/jsutils/runtime-aliases.js";
 
 //======================================================================
 const TEMPLATE = createElement("template");

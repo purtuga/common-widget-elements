@@ -1,5 +1,15 @@
-import {ComponentElement, prop, bind} from "component-element"
-import {appendChild, createElement, createTextNode, setAttribute, doc} from "common-micro-libs/src/jsutils/runtime-aliases";
+import {
+    ComponentElement,
+    prop,
+    bind
+} from "@purtuga/component-element/src/index.js"
+import {
+    appendChild,
+    createElement,
+    createTextNode,
+    setAttribute,
+    doc
+} from "@purtuga/common/src/jsutils/runtime-aliases.js";
 
 //=============================================================
 const SOURCE_SETUP = Symbol("SOURCE_SETUP");
@@ -38,85 +48,7 @@ export class Icon extends ComponentElement {
     //-------------------------------------------------------------
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ STATIC PROPERTIES ~~~~~
-    static get tagName() {
-        return "i-con";
-    }
-
-    static get template() {
-        return `
-<style>
-    :host {
-        display: inline-block;
-        position: relative;
-        box-sizing: border-box;
-        contain: content;
-        font-size: initial;
-        width: 24px;
-        height: 24px;
-        
-        /* -- var support -- */
-        width: var(--icon-size, 24px);
-        height: var(--icon-size, 24px);
-    }
-    
-    .i-con-font {
-        font-size: 24px;
-        font-size: var(--icon-size, 24px);
-    }
-    
-    /* -------------------------------------------
-            SIZES
-       ------------------------------------------- */
-    :host([size=xs]) {
-        width: 0.8rem;
-        height: 0.8rem;
-    }
-    :host([size=xs]) .i-con-font {
-        font-size: 0.8rem;
-    }
-    
-    :host([size=sm]) {
-        width: 1.55rem;
-        height: 1.55rem;
-    }
-    :host([size=sm]) .i-con-font {
-        font-size: 1.55rem;
-    }
-    
-    :host([size=md]) {
-        width: 2.25rem;
-        height: 2.25rem;
-    }
-    :host([size=md]) .i-con-font {
-        font-size: 2.25rem;
-    }
-    
-    :host([size=lg]) {
-        width: 3.0rem;
-        height: 3.0rem;
-    }
-    :host([size=lg]) .i-con-font {
-        font-size: 3.0rem;
-    }
-    :host([size=xl]) {
-        width: 3.75rem;
-        height: 3.75rem;
-    }
-    :host([size=xl]) .i-con-font {
-        font-size: 3.75rem;
-    }
-    
-    .i-con,
-    svg {
-      width: 100%;
-      height: 100%;
-    }
-    .i-con {
-        box-sizing: border-box;
-    } 
-</style>
-`;
-    }
+    static tagName = "i-con";
 
     /**
      * An array of icons sources. Object key is the value that should be used in
@@ -130,11 +62,9 @@ export class Icon extends ComponentElement {
     // static get useShadow() {}
     // static get shadowMode() {}
     // static getEventInitOptions(){}
-    // static get observedAttributes() {}
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ STATIC METHODS ~~~~~
 
-    // static renderTemplate(ele) {}
     // static define(name) {}
 
     /**
@@ -238,11 +168,8 @@ export class Icon extends ComponentElement {
     code = "";
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  LIFE CYCLE HOOKS  ~~~~~
-    // Called from constructor
-    // init() {}
 
-    // Called when all required `props` have been provided
-    ready() {
+    didInit() {
         if (!this[STATE]) {
             this[STATE] = {
                 $icon: null,
@@ -251,18 +178,94 @@ export class Icon extends ComponentElement {
             };
             this[SOURCE_STYLES] = {};
             this.onPropsChange(this._handlePropChanges);
-            this._handlePropChanges();
         }
     }
 
-    // Called if required fields are removed
-    // unready() {}
+    willRender() {
+        return this._renderDone;
+    }
 
-    // called when element is attached to dom
-    // mounted() {}
+    render() {
+        this._renderDone = true;
 
-    // called when element is removed from dom
-    // unmounted() {}
+        return `
+<style>
+    :host {
+        display: inline-block;
+        position: relative;
+        box-sizing: border-box;
+        contain: content;
+        font-size: initial;
+        width: 24px;
+        height: 24px;
+        
+        /* -- var support -- */
+        width: var(--icon-size, 24px);
+        height: var(--icon-size, 24px);
+    }
+    
+    .i-con-font {
+        font-size: 24px;
+        font-size: var(--icon-size, 24px);
+    }
+    
+    /* -------------------------------------------
+            SIZES
+       ------------------------------------------- */
+    :host([size=xs]) {
+        width: 0.8rem;
+        height: 0.8rem;
+    }
+    :host([size=xs]) .i-con-font {
+        font-size: 0.8rem;
+    }
+    
+    :host([size=sm]) {
+        width: 1.55rem;
+        height: 1.55rem;
+    }
+    :host([size=sm]) .i-con-font {
+        font-size: 1.55rem;
+    }
+    
+    :host([size=md]) {
+        width: 2.25rem;
+        height: 2.25rem;
+    }
+    :host([size=md]) .i-con-font {
+        font-size: 2.25rem;
+    }
+    
+    :host([size=lg]) {
+        width: 3.0rem;
+        height: 3.0rem;
+    }
+    :host([size=lg]) .i-con-font {
+        font-size: 3.0rem;
+    }
+    :host([size=xl]) {
+        width: 3.75rem;
+        height: 3.75rem;
+    }
+    :host([size=xl]) .i-con-font {
+        font-size: 3.75rem;
+    }
+    
+    .i-con,
+    svg {
+      width: 100%;
+      height: 100%;
+    }
+    .i-con {
+        box-sizing: border-box;
+    } 
+</style>
+`;
+    }
+
+    didRender() {
+        this._handlePropChanges();
+    }
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
