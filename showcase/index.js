@@ -6,6 +6,7 @@ import "../src/import.js"
 import "./popup-showcase.js"
 import "./content-access-showcase.js"
 import "./icon-showcase.js"
+import "./confirm-action-showcase.js"
 
 //========================================================
 
