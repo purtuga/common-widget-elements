@@ -1,6 +1,6 @@
 {
     "name": "@purtuga/common-widget-elements",
-    "version": "2.0.0",
+    "version": "2.1.0",
     "description": "Custom Element for use anywhere",
     "main": "src/index.js",
     "module": "dist/common-widget-elements.esm.min.js",
