@@ -86,18 +86,24 @@ class ConfirmAction extends ComponentElement {
         display: flex;
         align-content: space-between;
         position: absolute;
-        background-color: var(--theme-color-bg, white);
         white-space: nowrap;
+        background-color: var(--theme-color-bg, white);
+        color: var(--theme-color-fg);
         border: var(--theme-border-light, 1px solid lightgrey);
-        left: 0;
-        top: 0;
-        height: 100%;
-        max-width: var(--confirm-width, 300px); 
+        left: -1px;
+        top: -1px;
+        height: 102%;
+        min-width: 102%;
+        max-width: var(--confirm-width, 300px);
         user-select: none;
         overflow: hidden;
     }
     .confirm > * {
         padding: var(--theme-spacing-1, 0.2em);
+    }
+    :host([confirm-align-right]) .confirm {
+        left: auto;
+        right: -1px;
     }
     .hide {
         display: none;
@@ -110,7 +116,8 @@ class ConfirmAction extends ComponentElement {
     }
     .no,
     .yes {
-        padding: 0 var(--theme-spacing, 0.5em);
+        padding-left: var(--theme-spacing, 0.5em);
+        padding-right: var(--theme-spacing, 0.5em);
         transition: background-color 0.3s;
     }
     .no {
@@ -137,13 +144,13 @@ class ConfirmAction extends ComponentElement {
 <span class="action"><slot>&#9654;</slot></span>
 <div class="confirm hide">
     <span class="msg">
-        <slot name="message">Are you sure?</slot>
+        <slot name="message">Proceed?</slot>
     </span>
     <span class="no action">
-        <slot name="cancel"><i-con from="boxicons" name="undo"></i-con></slot>
+        <slot name="cancel">No</slot>
     </span>
     <span class="yes action">
-        <slot name="confirm"><i-con from="boxicons" name="check-double"></i-con></slot>
+        <slot name="confirm">Yes</slot>
     </span>
 </div>`;
     }

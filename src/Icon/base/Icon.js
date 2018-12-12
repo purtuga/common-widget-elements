@@ -198,6 +198,8 @@ export class Icon extends ComponentElement {
         font-size: initial;
         width: 24px;
         height: 24px;
+        vertical-align: baseline;
+        overflow: hidden;
         
         /* -- var support -- */
         width: var(--icon-size, 24px);
@@ -253,8 +255,11 @@ export class Icon extends ComponentElement {
     
     .i-con,
     svg {
-      width: 100%;
-      height: 100%;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
     }
     .i-con {
         box-sizing: border-box;

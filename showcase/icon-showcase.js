@@ -175,3 +175,31 @@ ${
 `;
     $cntr.appendChild(div);
 }
+
+
+
+showcase({name: "Sizes", group: GROUP_NAME },function ($content) {
+    let $div = document.createElement("div");
+
+    $div.innerHTML = `
+<h2>Box Icons (svg image)</h2>
+<i-con from="boxicons" name="swim"></i-con> - regular<br>
+<i-con from="boxicons" name="swim" size="xs"></i-con> Extra Small (xs)<br>
+<i-con from="boxicons" name="swim" size="sm"></i-con> Small (sm)<br>
+<i-con from="boxicons" name="swim" size="md"></i-con> Medium (md)<br>
+<i-con from="boxicons" name="swim" size="lg"></i-con> Large (lg)<br>
+<i-con from="boxicons" name="swim" size="xl"></i-con> Extra Large (xl)<br>
+
+
+<h2>Office UI Frabic (font icons)</h2>
+<i-con from="office-ui-fabric" name="ActivateOrders"></i-con> - regular<br>
+<i-con from="office-ui-fabric" name="ActivateOrders" size="xs"></i-con> Extra Small (xs)<br>
+<i-con from="office-ui-fabric" name="ActivateOrders" size="sm"></i-con> Small (sm)<br>
+<i-con from="office-ui-fabric" name="ActivateOrders" size="md"></i-con> Medium (md)<br>
+<i-con from="office-ui-fabric" name="ActivateOrders" size="lg"></i-con> Large (lg)<br>
+<i-con from="office-ui-fabric" name="ActivateOrders" size="xl"></i-con> Extra Large (xl)<br>
+`;
+
+
+    $content.appendChild($div);
+});
